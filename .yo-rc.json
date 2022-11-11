@@ -1,0 +1,16 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "version": "1.15.2",
+    "libraryName": "meet-manager",
+    "libraryId": "96d5ac42-a272-4097-801d-c04e83ef3ff8",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "meet-manager",
+    "solutionShortDescription": "meet-manager description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "meet-manager-client-side-solution",
+    "id": "96d5ac42-a272-4097-801d-c04e83ef3ff8",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.15.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "meet-manager description"
+      },
+      "longDescription": {
+        "default": "meet-manager description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "meet-manager Feature",
+        "description": "The feature that activates elements of the meet-manager solution.",
+        "id": "7d34f434-c367-4786-9719-9752f7e5c00c",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/meet-manager.sppkg"
+  }
+}
