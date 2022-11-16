@@ -11,18 +11,22 @@ import {
 } from "../../services/GroupService";
 
 function FormView(): React.ReactElement {
-  const field: IFieldAddResult = await sp.web.fields.addText("My Field", {
-    MaxLength: 255,
-    Group: "",
-  });
+  // const field: IFieldAddResult = await sp.web.fields.addText("My Field", {
+  //   MaxLength: 255,
+  //   Group: "",
+  // });
 
-  const field = await sp.web.fields.addDateTime("My Field", {
-    DisplayFormat: DateTimeFieldFormatType.DateOnly,
-    DateTimeCalendarType: CalendarType.Gregorian,
-    FriendlyDisplayFormat: DateTimeFieldFriendlyFormatType.Disabled,
-    Group: "My Group",
-  });
+  // const field = await sp.web.fields.addDateTime("My Field", {
+  //   DisplayFormat: DateTimeFieldFormatType.DateOnly,
+  //   DateTimeCalendarType: CalendarType.Gregorian,
+  //   FriendlyDisplayFormat: DateTimeFieldFriendlyFormatType.Disabled,
+  //   Group: "My Group",
+  // });
 
-  return <></>;
+  return (
+    <>
+      <form />
+    </>
+  );
 }
 export default FormView;
