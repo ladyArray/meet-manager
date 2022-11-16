@@ -1,32 +1,28 @@
 import * as React from "react";
 
 import GroupsView from "../GroupsView/GroupsView";
-
+import "@pnp/sp/webs";
+import "@pnp/sp/lists";
+import "@pnp/sp/fields";
 import {
   updateGroup,
   createGroup,
   getAllGroups,
 } from "../../services/GroupService";
-import { Button, Checkbox, Form } from "semantic-ui-react";
 
 function FormView(): React.ReactElement {
-  return (
-    <>
-      <Form>
-        <Form.Field>
-          <label>First Name</label>
-          <input placeholder="First Name" />
-        </Form.Field>
-        <Form.Field>
-          <label>Last Name</label>
-          <input placeholder="Last Name" />
-        </Form.Field>
-        <Form.Field>
-          <Checkbox label="I agree to the Terms and Conditions" />
-        </Form.Field>
-        <Button type="submit">Submit</Button>
-      </Form>
-    </>
-  );
+  const field: IFieldAddResult = await sp.web.fields.addText("My Field", {
+    MaxLength: 255,
+    Group: "",
+  });
+
+  const field = await sp.web.fields.addDateTime("My Field", {
+    DisplayFormat: DateTimeFieldFormatType.DateOnly,
+    DateTimeCalendarType: CalendarType.Gregorian,
+    FriendlyDisplayFormat: DateTimeFieldFriendlyFormatType.Disabled,
+    Group: "My Group",
+  });
+
+  return <></>;
 }
 export default FormView;

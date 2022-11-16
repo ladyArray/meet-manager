@@ -1,8 +1,9 @@
 import * as React from "react";
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { getSP } from "../../../pnpjsConfig";
-import "@pnp/sp/webs";
 import "@pnp/sp/lists";
+import "@pnp/sp/fields";
+import "@pnp/sp/webs";
 import "@pnp/sp/items";
 import { Field } from "@pnp/sp/fields/types";
 import { Fields } from "@pnp/sp/fields/types";
@@ -87,7 +88,7 @@ const getAttachedFilesGroup =
     return result;
   };
 
-const getTopics = () => async (): Promise<any[]> => {
+const getTopics = () => async (): Promise<any> => {
   const result = await getSP()
     .web.lists.getById("a66f450c-4326-43b8-9fdf-9bdf47e0b820")
     .fields.getByInternalNameOrTitle("TematicaGrupo")
@@ -96,33 +97,13 @@ const getTopics = () => async (): Promise<any[]> => {
   return result;
 };
 
-const getGroupTypes = () => async (): Promise<any[]> => {
+const getGroupTypes = () => async (): Promise<any> => {
   const result = await getSP()
     .web.lists.getById("a66f450c-4326-43b8-9fdf-9bdf47e0b820")
     .fields.getByInternalNameOrTitle("TipoGrupo")
     .select("Choices")();
 
   return result;
-};
-
-const getSectors = async (): Promise<ISectorData[]> => {
-  const result = await getSP()
-    .web.lists.getById("8CA011CD-2FD3-4D7E-A425-084C3A2CC900")
-    .items.select("*")
-    .expand()();
-  return result.map((item) => {
-    return {
-      ID: item.IDSector,
-      Code: item.CodigoSector,
-      Denomination: item.DenominacionSector,
-      URLImageSector: item.URLImagenSector,
-      URLGroupList: item.URLListaGrupos,
-      URLMeetingList: item.URLListaReuniones,
-      URLLibrary: item.URLBiblioteca,
-      URLAdmGroupSector: item.URLGrupoAdmSector,
-      URLUserGroupSector: item.URLGrupoUsuariosSector,
-    };
-  });
 };
 
 const createGroup = () => async (): Promise<IItemAddResult> => {
@@ -139,13 +120,40 @@ const getGroupById = (GroupID: number) => (): IItem => {
   return result;
 };
 
-const updateGroup =
-  (Group: IGroupData, sysUpdateData: any) =>
-  async (): Promise<IItemAddResult> => {
-    const oListItem = getGroupById(Group.ID);
-    const result = await oListItem.validateUpdateListItem(sysUpdateData);
+// const updateGroup =
+//   (Group: IGroupData, newUpdatedData: any[]) =>
+//   async (): Promise<IItemAddResult> => {
+//     const ListItem = getGroupById(Group.ID);
+//     const result = await ListItem.validateUpdateListItem(newUpdatedData);
+
+//     // if (error.length >0){
+
+//     // }
+//     return result;
+//   };
+//, newUpdatedData: any[]
+
+const updateGroup = (Group: IGroupData) => async () => {
+  const items: any[] = await getSP()
+    .web.lists.getByTitle("")
+    .items.top(1)
+    .filter("Title eq 'A Title'")();
+
+  if (items.length > 0) {
+    const result = await getSP()
+      .web.lists.getByTitle("")
+      .items.getById(items[0].Id)
+      .update({
+        IDGrupo: Group.ID,
+        CodigoGrupo: Group.Code,
+        DenominacionGrupo: Group.Denomination,
+        FechaCreacionGrupo: Group.CreationDate,
+        FechaFinalizacionGrupo: Group.CompletionDate,
+      });
+
     return result;
-  };
+  }
+};
 
 export {
   getAllGroups,
@@ -154,7 +162,6 @@ export {
   getGroupById,
   updateGroup,
   createGroup,
-  getSectors,
   getAttachedFilesGroup,
   getGroupTypes,
   getTopics,
