@@ -1,10 +1,9 @@
 import * as React from "react";
-import getSectors from "../../services/SectorService";
 import { ISectorData } from "../../models/ISectorData";
+import getSectors from "../../services/SectorService";
 
 function IndexView(): React.ReactElement {
   const [sectors, setSectors] = React.useState<ISectorData[]>([]);
-
   React.useEffect(() => {
     getSectors()
       .then((sectors) => {
@@ -12,19 +11,18 @@ function IndexView(): React.ReactElement {
       })
       .catch(console.error);
   }, []);
+
   return (
     <>
-      {
-        <div>
-          {sectors.map((s) => {
-            return (
-              <div key={s.ID}>
-                <div>{s.Denomination}</div>
-              </div>
-            );
-          })}
-        </div>
-      }
+      <header>
+        Encabezado, redirecciones
+        {sectors.map((sector) => (s: any) => (
+          <div key={s.id}>
+            <a href="`${s.URLGroupList.Url}`">{s.URLGroupList.Description}</a>
+            <a href="{s.URLMeetingList}">{s.URLMeetingList.Description}</a>
+          </div>
+        ))}
+      </header>
     </>
   );
 }

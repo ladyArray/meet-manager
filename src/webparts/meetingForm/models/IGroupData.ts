@@ -1,5 +1,6 @@
 export interface IGroupData {
-  ID: string;
+  ID: number;
+  Code: string;
   SectorAssociated: any;
   Denomination: string;
   Description: string;
