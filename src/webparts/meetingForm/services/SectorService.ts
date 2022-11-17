@@ -6,8 +6,6 @@ import "@pnp/sp/items";
 import { ISectorData } from "../models/ISectorData";
 
 const LIST_ID = "8CA011CD-2FD3-4D7E-A425-084C3A2CC900";
-// const _sp: SPFI = getSP(props.context);
-//const [sectors, setSectors] = React.useState<ISectorData[]>([]);
 
 const getSectors = async (): Promise<ISectorData[]> => {
   const result = await getSP()

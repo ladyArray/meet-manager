@@ -7,8 +7,6 @@ import { IAttachmentInfo } from "../models/IAttachmentInfo";
 
 const LIST_ID = "a66f450c-4326-43b8-9fdf-9bdf47e0b820";
 
-//const [groups, setGroups] = React.useState<IGroupData[]>([]);
-
 const getAllGroups = async (): Promise<IGroupData[]> => {
   const result = await getSP()
     .web.lists.getById(LIST_ID)
@@ -37,16 +35,6 @@ const getAllGroups = async (): Promise<IGroupData[]> => {
     };
   });
 };
-// const getTaxFields = (item: any, keys: string): string => {
-//   try {
-//     const taxonomy = item.TaxCatchAll.filter((item) => x.ID === Number(keys));
-
-//     return taxonomy[0].Term;
-//   } catch (error) {
-//     return null;
-//   }
-// };
-// };
 
 const getGroupInfo = (GroupID: number) => async (): Promise<any[]> => {
   const result = await getSP()
