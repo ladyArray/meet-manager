@@ -1,29 +1,17 @@
-import * as React from "react";
-import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { getSP } from "../../../pnpjsConfig";
-import "@pnp/sp/lists";
-import "@pnp/sp/fields";
-import "@pnp/sp/webs";
-import "@pnp/sp/items";
-import { Field } from "@pnp/sp/fields/types";
-import { Fields } from "@pnp/sp/fields/types";
+import { Field, Fields } from "@pnp/sp/fields/types";
 import { IMeetManagerProps } from "../IMeetManagerProps";
 import { IItem, IItemAddResult, Item } from "@pnp/sp/items";
-import { SPFI } from "@pnp/sp";
-import { useState } from "react";
 import { IGroupData } from "../models/IGroupData";
-import { ISectorData } from "../models/ISectorData";
 import { IAttachmentInfo } from "../models/IAttachmentInfo";
 
-let context: WebPartContext;
-
-const _sp: SPFI = getSP(context);
+const LIST_ID = "a66f450c-4326-43b8-9fdf-9bdf47e0b820";
 
 //const [groups, setGroups] = React.useState<IGroupData[]>([]);
 
 const getAllGroups = async (): Promise<IGroupData[]> => {
   const result = await getSP()
-    .web.lists.getById("a66f450c-4326-43b8-9fdf-9bdf47e0b820")
+    .web.lists.getById(LIST_ID)
     .items.select("*")
     .expand()();
   //console.log(groups);
@@ -46,7 +34,6 @@ const getAllGroups = async (): Promise<IGroupData[]> => {
       Field: item.AmbitoGrupo,
       Country: item.PaisGrupo,
       City: item.CiudadGrupo,
-      // Tax: getTaxFields(group, ["Field", "Country", "City"]?.label),
     };
   });
 };
@@ -61,17 +48,9 @@ const getAllGroups = async (): Promise<IGroupData[]> => {
 // };
 // };
 
-const getGroupsInfo = async (): Promise<any[]> => {
-  const result = await getSP()
-    .web.lists.getById("a66f450c-4326-43b8-9fdf-9bdf47e0b820")
-    .items.select("*")
-    .expand()();
-  return result;
-};
-
 const getGroupInfo = (GroupID: number) => async (): Promise<any[]> => {
   const result = await getSP()
-    .web.lists.getById("a66f450c-4326-43b8-9fdf-9bdf47e0b820")
+    .web.lists.getById(LIST_ID)
     .items.select("*")
     .getById(GroupID)
     .expand()();
@@ -81,7 +60,7 @@ const getGroupInfo = (GroupID: number) => async (): Promise<any[]> => {
 const getAttachedFilesGroup =
   (GroupID: number) => async (): Promise<IAttachmentInfo[]> => {
     const result = await getSP()
-      .web.lists.getById("a66f450c-4326-43b8-9fdf-9bdf47e0b820")
+      .web.lists.getById(LIST_ID)
       .items.getById(GroupID)
       // .attachmentFiles()
       .expand()();
@@ -90,7 +69,7 @@ const getAttachedFilesGroup =
 
 const getTopics = () => async (): Promise<any> => {
   const result = await getSP()
-    .web.lists.getById("a66f450c-4326-43b8-9fdf-9bdf47e0b820")
+    .web.lists.getById(LIST_ID)
     .fields.getByInternalNameOrTitle("TematicaGrupo")
     .select("Choices")();
 
@@ -99,7 +78,7 @@ const getTopics = () => async (): Promise<any> => {
 
 const getGroupTypes = () => async (): Promise<any> => {
   const result = await getSP()
-    .web.lists.getById("a66f450c-4326-43b8-9fdf-9bdf47e0b820")
+    .web.lists.getById(LIST_ID)
     .fields.getByInternalNameOrTitle("TipoGrupo")
     .select("Choices")();
 
@@ -107,16 +86,12 @@ const getGroupTypes = () => async (): Promise<any> => {
 };
 
 const createGroup = () => async (): Promise<IItemAddResult> => {
-  const result = await getSP()
-    .web.lists.getById("a66f450c-4326-43b8-9fdf-9bdf47e0b820")
-    .items.add({});
+  const result = await getSP().web.lists.getById(LIST_ID).items.add({});
   return result;
 };
 
 const getGroupById = (GroupID: number) => (): IItem => {
-  const result = getSP()
-    .web.lists.getById("a66f450c-4326-43b8-9fdf-9bdf47e0b820")
-    .items.getById(GroupID);
+  const result = getSP().web.lists.getById(LIST_ID).items.getById(GroupID);
   return result;
 };
 
@@ -157,7 +132,6 @@ const updateGroup = (Group: IGroupData) => async () => {
 
 export {
   getAllGroups,
-  getGroupsInfo,
   getGroupInfo,
   getGroupById,
   updateGroup,

@@ -56,14 +56,6 @@ function GroupsView(): React.ReactElement {
       .catch(console.error);
   }, []);
 
-  function parseDescription(Description: string) {
-    const find = "<[^<>]+>";
-    const re = new RegExp(find, "g");
-    const newDescription = Description.replace(re, "");
-
-    return newDescription;
-  }
-
   return (
     <>
       <section>
@@ -85,7 +77,7 @@ function GroupsView(): React.ReactElement {
                 {g.CreationDate} - {g.CompletionDate}
               </div>
 
-              <div className={classNames.itemName}> {g.newDescription}</div>
+              <div className={classNames.itemName}> {g.Description}</div>
             </div>
           </div>
         ))}

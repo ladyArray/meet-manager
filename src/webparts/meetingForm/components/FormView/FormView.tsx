@@ -1,31 +1,23 @@
 import * as React from "react";
-
-import GroupsView from "../GroupsView/GroupsView";
+import { IGroupData } from "../../models/IGroupData";
+import { getAllGroups } from "../../services/GroupService";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/fields";
-import {
-  updateGroup,
-  createGroup,
-  getAllGroups,
-} from "../../services/GroupService";
+import { updateGroup, createGroup } from "../../services/GroupService";
 
 function FormView(): React.ReactElement {
-  // const field: IFieldAddResult = await sp.web.fields.addText("My Field", {
-  //   MaxLength: 255,
-  //   Group: "",
-  // });
+  const [groups, setGroups] = React.useState<IGroupData[]>([]);
 
-  // const field = await sp.web.fields.addDateTime("My Field", {
-  //   DisplayFormat: DateTimeFieldFormatType.DateOnly,
-  //   DateTimeCalendarType: CalendarType.Gregorian,
-  //   FriendlyDisplayFormat: DateTimeFieldFriendlyFormatType.Disabled,
-  //   Group: "My Group",
-  // });
+  //  React.useEffect(() => {
+  //    groupService.getAll().then(setGroups).catch(console.error);
+  //  }, []);
 
   return (
     <>
-      <form />
+      <>
+        <h2>Formulario de Creación de Grupos</h2>
+      </>
     </>
   );
 }
