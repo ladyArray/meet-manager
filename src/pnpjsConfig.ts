@@ -1,10 +1,11 @@
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { spfi, SPFI, SPFx } from "@pnp/sp";
-
+import "@pnp/sp/fields";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
 import "@pnp/sp/batching";
+
 import { LogLevel, PnPLogging } from "@pnp/logging";
 
 let _sp: SPFI;

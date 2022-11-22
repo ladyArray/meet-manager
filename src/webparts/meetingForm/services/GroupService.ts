@@ -1,5 +1,5 @@
 import { getSP } from "../../../pnpjsConfig";
-//import { Field, Fields } from "@pnp/sp/fields/types";
+
 //import { IMeetingFormProps } from "../components/IMeetingFormProps";
 import { IItem, IItemAddResult, Item } from "@pnp/sp/items";
 
@@ -75,14 +75,28 @@ const getGroupTypes = () => async (): Promise<any> => {
   return result;
 };
 
-const createGroup = () => async (): Promise<IItemAddResult> => {
-  //esto no
-  const result = await getSP().web.lists.getById(LIST_ID).items.add({});
+const createGroup = async (): Promise<IItemAddResult> => {
+  const result = await getSP()
+    .web.lists.getById(LIST_ID)
+    .items.add({
+      ID: "",
+      Code: "",
+      SectorAssociated: "",
+      Denomination: "",
+      Description: "",
+      CreationDate: new Date("").toLocaleDateString("es-ES"),
+      CompletionDate: new Date("").toLocaleDateString("es-ES"),
+      State: "",
+      Type: "",
+      Topic: "",
+      Field: getMultiTaxField("", "AmbitoGrupo"),
+      Country: getTaxField("", "PaisGrupo"),
+      City: getTaxField("", "CiudadGrupo"),
+    });
   return result;
 };
 
 const getGroupById = async (groupId: number): Promise<IGroupData> => {
-  //esto esta bien
   console.log(groupId);
   const result = await getSP()
     .web.lists.getById(LIST_ID)

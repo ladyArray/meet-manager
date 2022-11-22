@@ -7,7 +7,6 @@ import GroupsView from "./GroupsView/GroupsView";
 import { IMeetingFormProps } from "../components/IMeetingFormProps";
 import FormView from "./FormView/FormView";
 import { HashRouter as Router, Route, Routes } from "react-router-dom";
-import { getAllGroups } from "../services/GroupService";
 
 export const SPContext = React.createContext(null);
 

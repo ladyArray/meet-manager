@@ -1,9 +1,6 @@
 import * as React from "react";
 import { IGroupData } from "../../models/IGroupData";
 import { getGroupById } from "../../services/GroupService";
-import "@pnp/sp/webs";
-import "@pnp/sp/lists";
-import "@pnp/sp/fields";
 
 import { updateGroup } from "../../services/GroupService";
 import { ITaxField } from "../../../../utils/taxFields";
@@ -75,25 +72,25 @@ function FormView(): React.ReactElement {
     []
   );
 
-  const optionsSector: IDropdownOption[] = [
-    {
-      key: "Header1",
-      text: "Sector Asociado",
-      itemType: DropdownMenuItemType.Header,
-    },
-    { key: "A", text: "Option A" },
+  const optionsSectorAssociated: IDropdownOption<any>[] = [
+    { key: "Aereo", text: "Aereo" },
+    { key: "Maritimo", text: "Maritimo" },
+    { key: "Terrestre", text: "Terrestre" },
   ];
-  const optionsGroupType: IDropdownOption[] = [
-    {
-      key: "Header1",
-      text: "Tipo de Grupo",
-      itemType: DropdownMenuItemType.Header,
-    },
-    { key: "A", text: "Option A" },
+
+  const optionsGroupType: IDropdownOption<any>[] = [
+    { key: "Grupo Ocasional", text: "Grupo Ocasional" },
+    { key: "Grupo Temporal", text: "Grupo Temporal" },
+    { key: "Grupo Estable", text: "Grupo Estable" },
   ];
-  const optionsTematica: any[] = [
-    { key: "Header1", text: "Tematica", itemType: DropdownMenuItemType.Header },
-    { key: "A", text: "Option A" },
+
+  const optionsTopic: any[] = [
+    {
+      key: "TeamBuilding",
+      text: "TeamBuilding",
+    },
+    { key: "Informativa", text: "Informativa" },
+    { key: "Ejecutiva", text: "Ejecutiva" },
   ];
 
   function onChooseTax(terms: ITaxField) {
@@ -125,21 +122,30 @@ function FormView(): React.ReactElement {
           <Stack horizontal tokens={stackTokens} styles={stackStyles}>
             <Stack {...columnProps}>
               <Dropdown
-                placeholder={groupSelected.Description}
-                label="Sector"
-                options={optionsSector}
+                placeholder={groupSelected.SectorAssociated}
+                label="Sector Asociado"
+                options={optionsSectorAssociated}
                 styles={dropdownStyles}
               />
-              {/* <p>{groupSelected.SectorAsociado}</p> */}
-              {/* <TextField placeholder={groupSelected.} label="Denominación" /> */}
-              {/* <TextField placeholder={groupSelected.} label="Descripción" multiline rows={3} /> */}
+              <p>{groupSelected.SectorAssociated}</p>
+
+              <TextField
+                placeholder={groupSelected.Denomination}
+                label="Denominación"
+              />
+
+              <TextField
+                placeholder={groupSelected.Description}
+                label="Descripción"
+                multiline
+                rows={3}
+              />
 
               <DatePicker
-                placeholder="" //{.CompletionDate}
+                placeholder={groupSelected.CompletionDate}
                 label="Fecha de Finalización"
                 firstDayOfWeek={firstDayOfWeek}
                 ariaLabel="Select a date"
-                // DatePicker uses English strings by default. For localized apps, you must override this prop.
                 strings={defaultDatePickerStrings}
               />
             </Stack>
@@ -150,19 +156,22 @@ function FormView(): React.ReactElement {
                 defaultChecked
                 onText="Abierto"
                 offText="Cerrado"
-                onChange={() => alert("Cambio de estado a {.State}")}
+                onChange={() =>
+                  alert(`Cambio de estado a  ${groupSelected.State}`)
+                }
               />
 
               <Dropdown
-                placeholder="" //{groupSelected.Type}
+                placeholder={groupSelected.Type}
+                label="Tipo de Grupo"
                 options={optionsGroupType}
                 styles={dropdownStyles}
               />
 
               <Dropdown
-                placeholder="" //{groupSelected.Field}
+                placeholder={groupSelected.Field.term}
                 label="Temática"
-                options={optionsTematica}
+                options={optionsTopic}
                 styles={dropdownStyles}
               />
 
