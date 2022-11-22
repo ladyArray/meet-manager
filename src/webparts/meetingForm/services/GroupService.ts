@@ -1,18 +1,20 @@
 import { getSP } from "../../../pnpjsConfig";
-import { Field, Fields } from "@pnp/sp/fields/types";
-import { IMeetManagerProps } from "../IMeetManagerProps";
+//import { Field, Fields } from "@pnp/sp/fields/types";
+//import { IMeetingFormProps } from "../components/IMeetingFormProps";
 import { IItem, IItemAddResult, Item } from "@pnp/sp/items";
+
 import { IGroupData } from "../models/IGroupData";
 import { IAttachmentInfo } from "../models/IAttachmentInfo";
+import { getTaxField, getMultiTaxField } from "../../../utils/taxFields";
 
 const LIST_ID = "a66f450c-4326-43b8-9fdf-9bdf47e0b820";
 
 const getAllGroups = async (): Promise<IGroupData[]> => {
   const result = await getSP()
     .web.lists.getById(LIST_ID)
-    .items.select("*")
-    .expand()();
-  //console.log(groups);
+    .items.select("*", "TaxCatchAll/Term", "TaxCatchAll/ID")
+    .expand("TaxCatchAll")();
+
   return result.map((item) => {
     return {
       ID: item.IDGrupo,
@@ -29,9 +31,9 @@ const getAllGroups = async (): Promise<IGroupData[]> => {
       State: item.EstadoGrupo,
       Type: item.TipoGrupo,
       Topic: item.TematicaGrupo,
-      Field: item.AmbitoGrupo,
-      Country: item.PaisGrupo,
-      City: item.CiudadGrupo,
+      Field: getMultiTaxField(item, "AmbitoGrupo"),
+      Country: getTaxField(item, "PaisGrupo"),
+      City: getTaxField(item, "CiudadGrupo"),
     };
   });
 };
@@ -74,13 +76,41 @@ const getGroupTypes = () => async (): Promise<any> => {
 };
 
 const createGroup = () => async (): Promise<IItemAddResult> => {
+  //esto no
   const result = await getSP().web.lists.getById(LIST_ID).items.add({});
   return result;
 };
 
-const getGroupById = (GroupID: number) => (): IItem => {
-  const result = getSP().web.lists.getById(LIST_ID).items.getById(GroupID);
-  return result;
+const getGroupById = async (groupId: number): Promise<IGroupData> => {
+  //esto esta bien
+  console.log(groupId);
+  const result = await getSP()
+    .web.lists.getById(LIST_ID)
+    .items.getById(groupId)
+    .select("*", "TaxCatchAll/Term", "TaxCatchAll/ID")
+    .expand("TaxCatchAll")();
+  console.log(result);
+  const groupById: IGroupData = {
+    ID: result.IDGrupo,
+    Code: result.CodigoGrupo,
+    SectorAssociated: result.SectorAsociado,
+    Denomination: result.DenominacionGrupo,
+    Description: result.DescripcionGrupo,
+    CreationDate: new Date(result.FechaCreacionGrupo).toLocaleDateString(
+      "es-ES"
+    ),
+    CompletionDate: new Date(result.FechaFinalizacionGrupo).toLocaleDateString(
+      "es-ES"
+    ),
+    State: result.EstadoGrupo,
+    Type: result.TipoGrupo,
+    Topic: result.TematicaGrupo,
+    Field: getMultiTaxField(result, "AmbitoGrupo"),
+    Country: getTaxField(result, "PaisGrupo"),
+    City: getTaxField(result, "CiudadGrupo"),
+  };
+
+  return groupById;
 };
 
 // const updateGroup =

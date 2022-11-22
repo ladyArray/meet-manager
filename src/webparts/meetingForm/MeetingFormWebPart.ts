@@ -15,6 +15,7 @@ import { getSP } from "../../pnpjsConfig";
 
 export interface IMeetingFormWebPartProps {
   description: string;
+  context: any;
 }
 
 export default class MeetingFormWebPart extends BaseClientSideWebPart<IMeetingFormWebPartProps> {
@@ -23,6 +24,7 @@ export default class MeetingFormWebPart extends BaseClientSideWebPart<IMeetingFo
       MeetingForm,
       {
         description: this.properties.description,
+        context: this.properties.context,
       }
     );
 

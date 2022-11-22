@@ -1,13 +1,17 @@
 import * as React from "react";
+import { Link, Outlet } from "react-router-dom";
 import { ISectorData } from "../../models/ISectorData";
 import getSectors from "../../services/SectorService";
 
 function IndexView(): React.ReactElement {
   const [sectors, setSectors] = React.useState<ISectorData[]>([]);
+
   React.useEffect(() => {
     getSectors()
       .then((sectors) => {
         setSectors(sectors);
+
+        console.log(sectors);
       })
       .catch(console.error);
   }, []);
@@ -15,6 +19,25 @@ function IndexView(): React.ReactElement {
   return (
     <>
       <header>
+        Header y enlaces de sectors
+        {sectors.map((s) => (
+          <div key={s.ID}>
+            {console.log(s)}
+            <Link to={s.URLGroupList?.Url}>{s.URLGroupList?.Description}</Link>
+            <Link to={s.URLMeetingList?.Url}>
+              {s.URLMeetingList?.Description}
+            </Link>
+          </div>
+        ))}
+      </header>
+      <Outlet />
+    </>
+  );
+}
+export default IndexView;
+
+/**
+ *       <header>
         Encabezado, redirecciones
         {sectors.map((sector) => (s: any) => (
           <div key={s.id}>
@@ -23,7 +46,19 @@ function IndexView(): React.ReactElement {
           </div>
         ))}
       </header>
-    </>
-  );
-}
-export default IndexView;
+ */
+
+// const AlphabetCharsList = ({ alphabetChars }) => {
+//   return (
+//     <div>
+//       {alphabetChars.map((char) => (
+//         <div key={char.romaji}>
+//           <Link href={"/contacts/" + char.romaji}>
+//             {char.hiragana}/{char.romaji}
+//           </Link>
+//           <br />
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
