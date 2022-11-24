@@ -57,7 +57,7 @@ const getAttachedFilesGroup =
     return result;
   };
 
-const getTopics = () => async (): Promise<any> => {
+const getTopic = async (): Promise<any> => {
   const result = await getSP()
     .web.lists.getById(LIST_ID)
     .fields.getByInternalNameOrTitle("TematicaGrupo")
@@ -66,7 +66,7 @@ const getTopics = () => async (): Promise<any> => {
   return result;
 };
 
-const getGroupTypes = () => async (): Promise<any> => {
+const getGroupType = async (): Promise<any> => {
   const result = await getSP()
     .web.lists.getById(LIST_ID)
     .fields.getByInternalNameOrTitle("TipoGrupo")
@@ -142,7 +142,7 @@ const getGroupById = async (groupId: number): Promise<IGroupData> => {
 
 const updateGroup = (Group: IGroupData) => async () => {
   const items: any[] = await getSP()
-    .web.lists.getByTitle("")
+    .web.lists.getById("")
     .items.top(1)
     .filter("Title eq 'A Title'")();
 
@@ -151,16 +151,30 @@ const updateGroup = (Group: IGroupData) => async () => {
       .web.lists.getByTitle("")
       .items.getById(items[0].Id)
       .update({
-        IDGrupo: Group.ID,
-        CodigoGrupo: Group.Code,
+        SectorAsociado: Group.SectorAssociated,
         DenominacionGrupo: Group.Denomination,
+        DescripcionGrupo: Group.Description,
         FechaCreacionGrupo: Group.CreationDate,
         FechaFinalizacionGrupo: Group.CompletionDate,
+        AmbitoGrupo: Group.Field,
+        PaisGrupo: Group.Country,
+        CiudadGrupo: Group.City,
+        EstadoGrupo: Group.State,
       });
 
     return result;
   }
 };
+
+// CompletionDate: new Date(item.FechaFinalizacionGrupo).toLocaleDateString(
+//   "es-ES"
+// ),
+// State: item.EstadoGrupo,
+// Type: item.TipoGrupo,
+// Topic: item.TematicaGrupo,
+// Field: getMultiTaxField(item, "AmbitoGrupo"),
+// Country: getTaxField(item, "PaisGrupo"),
+// City: getTaxField(item, "CiudadGrupo"),
 
 export {
   getAllGroups,
@@ -169,6 +183,6 @@ export {
   updateGroup,
   createGroup,
   getAttachedFilesGroup,
-  getGroupTypes,
-  getTopics,
+  getGroupType,
+  getTopic,
 };

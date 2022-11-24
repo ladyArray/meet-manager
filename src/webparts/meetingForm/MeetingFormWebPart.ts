@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDom from "react-dom";
-
+import { WebPartContext } from "@microsoft/sp-webpart-base";
 import { Version } from "@microsoft/sp-core-library";
 import {
   IPropertyPaneConfiguration,
@@ -15,7 +15,7 @@ import { getSP } from "../../pnpjsConfig";
 
 export interface IMeetingFormWebPartProps {
   description: string;
-  context: any;
+  context: WebPartContext;
 }
 
 export default class MeetingFormWebPart extends BaseClientSideWebPart<IMeetingFormWebPartProps> {
