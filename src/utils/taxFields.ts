@@ -25,3 +25,11 @@ export const getMultiTaxField = (item: any, key: string): ITaxField[] => {
     term: taxList[WssId],
   }));
 };
+
+export interface IPickerTerm {
+  name: string;
+  key: string;
+  path: string;
+  TermSet: string;
+  termsetName?: string;
+}

@@ -1,11 +1,12 @@
 import { getSP } from "../../../pnpjsConfig";
-
+import "@pnp/sp/taxonomy";
 //import { IMeetingFormProps } from "../components/IMeetingFormProps";
 import { IItem, IItemAddResult, Item } from "@pnp/sp/items";
 
 import { IGroupData } from "../models/IGroupData";
 import { IAttachmentInfo } from "../models/IAttachmentInfo";
 import { getTaxField, getMultiTaxField } from "../../../utils/taxFields";
+import { ITermGroupInfo, ITermSetInfo } from "@pnp/sp/taxonomy";
 
 const LIST_ID = "a66f450c-4326-43b8-9fdf-9bdf47e0b820";
 
@@ -17,7 +18,7 @@ const getAllGroups = async (): Promise<IGroupData[]> => {
 
   return result.map((item) => {
     return {
-      ID: item.IDGrupo,
+      ID: item.ID,
       Code: item.CodigoGrupo,
       SectorAssociated: item.SectorAsociado,
       Denomination: item.DenominacionGrupo,
@@ -66,34 +67,69 @@ const getTopic = async (): Promise<any> => {
   return result;
 };
 
-const getGroupType = async (): Promise<any> => {
+const getGroupTypeOptions = async (): Promise<any> => {
   const result = await getSP()
     .web.lists.getById(LIST_ID)
     .fields.getByInternalNameOrTitle("TipoGrupo")
     .select("Choices")();
 
-  return result;
+  const auxChoices = [];
+  for (const choice of result.Choices) {
+    auxChoices.push({
+      key: choice,
+      text: choice,
+    });
+  }
+
+  return auxChoices;
 };
 
-const createGroup = async (): Promise<IItemAddResult> => {
-  const result = await getSP()
+//Dudoso funcionamiento
+async function createGroup(sysSubmitData: any) {
+  console.log(sysSubmitData);
+
+  const listAddResult: any = getSP().web.lists.getById(LIST_ID).items;
+
+  console.log(listAddResult);
+
+  const result = await listAddResult
+    .add({
+      // AmbitoGrupo: sysSubmitData.AmbitoGrupo,
+      // CodigoGrupo: sysSubmitData.CodigoGrupo,
+      // DenominacionGrupo: sysSubmitData.DenominacionGrupo,
+      // DescripcionGrupo: sysSubmitData.DescripcionGrupo,
+      // FechaCreacionGrupo: sysSubmitData.FechaCreacionGrupo,
+      // FechaFinalizacionGrupo: sysSubmitData.FechaFinalizacionGrupo,
+      // EstadoGrupo: sysSubmitData.EstadoGrupo,
+      // TipoGrupo: sysSubmitData.TipoGrupo,
+      // TematicaGrupo: sysSubmitData.TematicaGrupo,
+    })
+    .then(
+      async function (value: any) {
+        console.log(value);
+        const insertData: any = await getSP()
+          .web.lists.getById(LIST_ID)
+          .items.getById(value.data.ID)
+          .validateUpdateListItem(sysSubmitData);
+
+        console.log(insertData, value.data.ID);
+      },
+      function (reason: any) {
+        console.error(reason);
+      }
+    );
+  console.log();
+
+  return true;
+}
+
+const deleteGroup = async (Id: number) => {
+  const groupToDelete: IItem = getSP()
     .web.lists.getById(LIST_ID)
-    .items.add({
-      ID: "",
-      Code: "",
-      SectorAssociated: "",
-      Denomination: "",
-      Description: "",
-      CreationDate: new Date("").toLocaleDateString("es-ES"),
-      CompletionDate: new Date("").toLocaleDateString("es-ES"),
-      State: "",
-      Type: "",
-      Topic: "",
-      Field: getMultiTaxField("", "AmbitoGrupo"),
-      Country: getTaxField("", "PaisGrupo"),
-      City: getTaxField("", "CiudadGrupo"),
-    });
-  return result;
+    .items.getById(Id);
+
+  const result = await groupToDelete.delete();
+  return;
 };
 
 const getGroupById = async (groupId: number): Promise<IGroupData> => {
@@ -127,44 +163,23 @@ const getGroupById = async (groupId: number): Promise<IGroupData> => {
   return groupById;
 };
 
-// const updateGroup =
-//   (Group: IGroupData, newUpdatedData: any[]) =>
-//   async (): Promise<IItemAddResult> => {
-//     const ListItem = getGroupById(Group.ID);
-//     const result = await ListItem.validateUpdateListItem(newUpdatedData);
+async function updateGroup(GroupId: number, sysUpdateData: any) {
+  console.log(sysUpdateData);
+  const groupToUpdate: IItem = getSP()
+    .web.lists.getById(LIST_ID)
+    .items.getById(GroupId);
 
-//     // if (error.length >0){
+  const result = await groupToUpdate.validateUpdateListItem(sysUpdateData);
 
-//     // }
-//     return result;
-//   };
-//, newUpdatedData: any[]
+  const errors = result.filter(
+    (field: { ErrorMessage: any }) => field.ErrorMessage !== null
+  );
 
-const updateGroup = (Group: IGroupData) => async () => {
-  const items: any[] = await getSP()
-    .web.lists.getById("")
-    .items.top(1)
-    .filter("Title eq 'A Title'")();
-
-  if (items.length > 0) {
-    const result = await getSP()
-      .web.lists.getByTitle("")
-      .items.getById(items[0].Id)
-      .update({
-        SectorAsociado: Group.SectorAssociated,
-        DenominacionGrupo: Group.Denomination,
-        DescripcionGrupo: Group.Description,
-        FechaCreacionGrupo: Group.CreationDate,
-        FechaFinalizacionGrupo: Group.CompletionDate,
-        AmbitoGrupo: Group.Field,
-        PaisGrupo: Group.Country,
-        CiudadGrupo: Group.City,
-        EstadoGrupo: Group.State,
-      });
-
-    return result;
+  if (errors.length > 0) {
+    throw new Error(JSON.stringify(errors));
   }
-};
+  return true;
+}
 
 // CompletionDate: new Date(item.FechaFinalizacionGrupo).toLocaleDateString(
 //   "es-ES"
@@ -176,6 +191,34 @@ const updateGroup = (Group: IGroupData) => async () => {
 // Country: getTaxField(item, "PaisGrupo"),
 // City: getTaxField(item, "CiudadGrupo"),
 
+const getCountryTaxOptions = async (): Promise<any> => {
+  const result: ITermSetInfo = await getSP()
+    .web.lists.getById(LIST_ID)
+    .fields.getByInternalNameOrTitle("PaisGrupo")
+    .select("Choices")();
+  return result;
+};
+
+const getCityTaxOptions = async (): Promise<any> => {
+  const result: ITermSetInfo = await getSP()
+    .web.lists.getById(LIST_ID)
+    .fields.getByInternalNameOrTitle("CiudadGrupo")
+    .select("Choices")();
+};
+
+const getFieldMultiTaxOptions = async (): Promise<any> => {
+  return true;
+};
+
+/**const getTopic = async (): Promise<any> => {
+  const result = await getSP()
+    .web.lists.getById(LIST_ID)
+    .fields.getByInternalNameOrTitle("TematicaGrupo")
+    .select("Choices")();
+
+  return result;
+}; */
+
 export {
   getAllGroups,
   getGroupInfo,
@@ -183,6 +226,7 @@ export {
   updateGroup,
   createGroup,
   getAttachedFilesGroup,
-  getGroupType,
+  getGroupTypeOptions,
   getTopic,
+  deleteGroup,
 };

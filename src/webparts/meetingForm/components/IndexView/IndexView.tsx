@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Link, Outlet } from "react-router-dom";
 import { ISectorData } from "../../models/ISectorData";
-import getSectors from "../../services/SectorService";
+import { getSectors } from "../../services/SectorService";
 
 function IndexView(): React.ReactElement {
   const [sectors, setSectors] = React.useState<ISectorData[]>([]);
@@ -23,12 +23,11 @@ function IndexView(): React.ReactElement {
         {sectors.map((s) => (
           <div key={s.ID}>
             {console.log(s)}
-            <Link to={s.URLGroupList?.Url}>{s.URLGroupList?.Description}</Link>
-            <Link to={s.URLMeetingList?.Url}>
-              {s.URLMeetingList?.Description}
-            </Link>
+            <a href={s.URLGroupList?.Url}>{s.URLGroupList?.Description}</a>
+            <a href={s.URLMeetingList?.Url}>{s.URLMeetingList?.Description}</a>
           </div>
         ))}
+        <Link to="/createGroup/">Crear nuevo grupo</Link>
       </header>
       <Outlet />
     </>
